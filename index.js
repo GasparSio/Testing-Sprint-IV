@@ -1,4 +1,3 @@
-
 class Room{
   constructor(name, bookings, rate, discount){
     this.name = name;
@@ -7,48 +6,51 @@ class Room{
     this.discount = discount;
   }
   isOccupied(date){
-    for(const booking of this.bookings){
-      if(booking.date === date)
-      return true;
+    const myDate = new Date(date);
+
+    for(let i = 0; i < this.bookings.length; i++){
+      const startDate = new Date(this.bookings[i].checkIn)
+      const endDate = new Date(this.bookings[i].checkOut)
+      
+      if(myDate >= startDate && myDate <= endDate){
+        return true;
     }
+  }
     return false;
   }
-  occupancyPercentage(startDate, endDate){
-    const oneDay = 24 * 60 * 60 * 1000; // un dia en milisegundos
-    const checkStartDate = new Date(startDate).getTime();
-    const checkEndDate = new Date(endDate).getTime();
-    const nighCount = Math.abs(checkEndDate - checkStartDate) / oneDay;
-    const bookingsLength = this.bookings.length;
-    const chequear = (checkEndDate > (new Date(this.bookings[bookingsLength - 1].date)) && checkStartDate < (new Date(this.bookings[0].date)) )
+  occupancyPercentage(startingDate, endingDate){
+    const startDate = new Date(startingDate)
+    const endDate = new Date(endingDate)
 
-    if(chequear){
-      const roomOccupancy = this.bookings.length
-      const porcentage = (roomOccupancy * 100) / nighCount
-      return Math.ceil(porcentage)
+    const totalDaysInrange = (endDate - startDate) / (24 * 60 * 60 * 1000) + 1;
 
-    } else{
-      throw new Error('Error')
+    let occupiedDays = 0;
+
+    for(let i = startDate; i <= endDate; i.setDate(i.getDate() + 1)){
+      if (this.isOccupied(i)){
+        occupiedDays++;
+      }
     }
+    const percentage = (occupiedDays / totalDaysInrange) * 100;
+    console.log(percentage);
+    return parseFloat(percentage.toFixed(1));
+    
   }
 }
 
+class Booking{
+  constructor(name, email, checkIn, checkOut, discount, room){
+    this.name = name;
+    this.email = email;
+    this.checkIn = checkIn;
+    this.checkOut = checkOut;
+    this.discount = discount;
+    this.room = room;
+  }
+}
 
-module.exports = Room;
+module.exports = {
+  Room,
+  Booking
+} 
 
-
-// class Booking{
-//   constructor(name, email, checkin, checkout, discount, room){
-//     this.name = name;
-//     this.email = email;
-//     this.checkin = checkin;
-//     this.checkout = checkout;
-//     this.discount = discount;
-//     this.room = {
-//       name, 
-//       rate,
-//       discount,
-//     };
-//   }
-// }
-
-// module.exports = Booking
