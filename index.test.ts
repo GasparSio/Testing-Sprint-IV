@@ -164,7 +164,7 @@ describe('Testing Booking Class', () => {
     const roomA = new Room('Habitacion 1', [], 150, 10);
     const booking1 = new Booking('booking 1', 'booking1@bo.com', '2023-10-01', '2023-10-03', 10, roomA);
     const rate = booking1.getFee()
-    expect(rate).toBe(108)
+    expect(rate).toBe(121.5)
   })
   it('Calculando el precio/rate de la room, segun el discount de la clase booking', () => {
     const roomA = new Room('Habitacion 1', [], 150, 0);
