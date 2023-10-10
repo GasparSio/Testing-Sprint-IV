@@ -79,13 +79,15 @@ export class Room {
   }
 
   static totalOccupancyPercentage(rooms: Room[], startDate: string, endDate: string): number {
-    function countDays(startDate, endDate) {
+    function countDays(startDate: string, endDate: string): number {
       const oneDay = 24 * 60 * 60 * 1000;
-      return Math.round(Math.abs((startDate - endDate) / oneDay)) + 1;
+      const startTimestamp = new Date(startDate).getTime(); // Convertir a timestamp
+      const endTimestamp = new Date(endDate).getTime();  
+      return Math.round(Math.abs((startTimestamp - endTimestamp) / oneDay)) + 1;
     }
 
     let totalOccupiedDays = 0;
-    let totalDaysInRange = countDays(new Date(startDate), new Date(endDate));
+    let totalDaysInRange = countDays(startDate, endDate);
     if (totalDaysInRange === 0) {
       return 0;
     }
