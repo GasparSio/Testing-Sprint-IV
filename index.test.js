@@ -52,7 +52,7 @@ describe('Testing class Room', () => {
     expect(typeof isOccupiedTest1).toBe('boolean')
     expect(typeof isOccupiedTest2).toBe('boolean')
   })
-  it("occupancyPercentage tiene que devolver 100 si todas las fechas pasadas al metodo están dentro del rango de bookings", () => {
+  it("occupancyPercentage devuelve el % de ocupacion dependiendo dependiendo las fechas pasadas", () => {
     const room = {
       name: "Room1",
       rate: 150,
@@ -84,7 +84,7 @@ describe('Testing class Room', () => {
 
     expect(percentage).toBe(100);
   });
-  it("occupancyPercentage tiene que devolver 100 si todas las fechas pasadas al metodo están dentro del rango de bookings", () => {
+  it("occupancyPercentage devuelve el % de ocupacion dependiendo dependiendo las fechas pasadas", () => {
     const room = {
       name: "Room1",
       rate: 150,
@@ -144,7 +144,7 @@ describe('Testing class Room', () => {
     const room_1 = new Room(roomA.name, bookingsA, roomA.rate, roomA.discount);
     const room_2 = new Room(roomB.name, bookingsB, roomB.rate, roomB.discount);
     const arrayOfRooms = [room_1, room_2]
-    const totalOccupPer = Room.totalOccupancyPercentage(arrayOfRooms, '2023-10-01', '2023-10-30');
+    const totalOccupPer = Room.totalOccupancyPercentage(arrayOfRooms, '2023-10-01', '2023-10-31');
     expect(totalOccupPer).toBe(50)
   })
   it('totalOccupancyPercentage nos devuelve el porcentaje promedio de ocupacion de todas las habitaiones', () => {
@@ -177,5 +177,162 @@ describe('Testing class Room', () => {
     const arrayOfRooms = [room_1, room_2]
     const totalOccupPer = Room.totalOccupancyPercentage(arrayOfRooms, '2023-05-01', '2023-05-30');
     expect(totalOccupPer).toBe(61.6)
+  })
+  it('availableRooms nos devuelve un array de las rooms que no estan ocupadas', () => {
+    const roomA = {
+      name: 'Habitacion 1',
+      rate: 150,
+      discount: 10,
+    };
+    const booking1 = new Booking('booking 1', 'booking1@bo.com', '2023-10-01', '2023-10-03', 10, roomA);
+    const booking2 = new Booking('booking 2', 'booking1@bo.com', '2023-10-04', '2023-10-06', 10, roomA);
+
+    const bookingsA = [
+      booking1,
+      booking2,
+    ]
+    const roomB = {
+      name: 'Habitacion 2',
+      rate: 150,
+      discount: 10,
+    };
+    const booking3 = new Booking('booking 3', 'booking3@bo.com', '2023-10-10', '2023-10-14', 10, roomB);
+    const booking4 = new Booking('booking 4', 'booking4@bo.com', '2023-10-15', '2023-10-17', 10, roomB);
+    
+    const bookingsB = [
+      booking3,
+      booking4,
+    ]
+    const room_1 = new Room(roomA.name, bookingsA, roomA.rate, roomA.discount);
+    const room_2 = new Room(roomB.name, bookingsB, roomB.rate, roomB.discount);
+    const arrayOfRooms = [room_1, room_2]
+    const freeRooms = Room.availableRooms(arrayOfRooms, '2023-10-18', '2023-10-30');
+    expect(freeRooms).toEqual([room_1, room_2])
+  })
+  it('availableRooms nos devuelve un array de las rooms que no estan ocupadas', () => {
+    const roomA = {
+      name: 'Habitacion 1',
+      rate: 150,
+      discount: 10,
+    };
+    const booking1 = new Booking('booking 1', 'booking1@bo.com', '2023-10-01', '2023-10-03', 10, roomA);
+    const booking2 = new Booking('booking 2', 'booking1@bo.com', '2023-10-04', '2023-10-06', 10, roomA);
+
+    const bookingsA = [
+      booking1,
+      booking2,
+    ]
+    const roomB = {
+      name: 'Habitacion 2',
+      rate: 150,
+      discount: 10,
+    };
+    const booking3 = new Booking('booking 3', 'booking3@bo.com', '2023-10-07', '2023-10-10', 10, roomB);
+    const booking4 = new Booking('booking 4', 'booking4@bo.com', '2023-10-11', '2023-10-15', 10, roomB);
+    
+    const bookingsB = [
+      booking3,
+      booking4,
+    ]
+    const room_1 = new Room(roomA.name, bookingsA, roomA.rate, roomA.discount);
+    const room_2 = new Room(roomB.name, bookingsB, roomB.rate, roomB.discount);
+    const arrayOfRooms = [room_1, room_2]
+    const freeRooms = Room.availableRooms(arrayOfRooms, '2023-10-11', '2023-10-20');
+    expect(freeRooms).toEqual([room_1])
+  })
+  it('availableRooms nos devuelve un array vacio ya que las rooms estan ocupadas', () => {
+    const roomA = {
+      name: 'Habitacion 1',
+      rate: 150,
+      discount: 10,
+    };
+    const booking1 = new Booking('booking 1', 'booking1@bo.com', '2023-10-01', '2023-10-03', 10, roomA);
+    const booking2 = new Booking('booking 2', 'booking1@bo.com', '2023-10-04', '2023-10-06', 10, roomA);
+
+    const bookingsA = [
+      booking1,
+      booking2,
+    ]
+    const roomB = {
+      name: 'Habitacion 2',
+      rate: 150,
+      discount: 10,
+    };
+    const booking3 = new Booking('booking 3', 'booking3@bo.com', '2023-10-07', '2023-10-10', 10, roomB);
+    const booking4 = new Booking('booking 4', 'booking4@bo.com', '2023-10-11', '2023-10-15', 10, roomB);
+    
+    const bookingsB = [
+      booking3,
+      booking4,
+    ]
+    const room_1 = new Room(roomA.name, bookingsA, roomA.rate, roomA.discount);
+    const room_2 = new Room(roomB.name, bookingsB, roomB.rate, roomB.discount);
+    const arrayOfRooms = [room_1, room_2]
+    const freeRooms = Room.availableRooms(arrayOfRooms, '2023-10-04', '2023-10-10');
+    expect(freeRooms).toEqual([])
+  })
+  it('availableRooms nos devuelve un array de las 2 rooms que no estan ocupadas', () => {
+    const roomA = {
+      name: 'Habitacion 1',
+      rate: 150,
+      discount: 10,
+    };
+    const booking1 = new Booking('booking 1', 'booking1@bo.com', '2023-10-01', '2023-10-03', 10, roomA);
+    const booking2 = new Booking('booking 2', 'booking1@bo.com', '2023-10-04', '2023-10-06', 10, roomA);
+
+    const bookingsA = [
+      booking1,
+      booking2,
+    ]
+    const roomB = {
+      name: 'Habitacion 2',
+      rate: 150,
+      discount: 10,
+    };
+    const booking3 = new Booking('booking 3', 'booking3@bo.com', '2023-10-07', '2023-10-10', 10, roomB);
+    const booking4 = new Booking('booking 4', 'booking4@bo.com', '2023-10-11', '2023-10-15', 10, roomB);
+    
+    const bookingsB = [
+      booking3,
+      booking4,
+    ]
+    const room_1 = new Room(roomA.name, bookingsA, roomA.rate, roomA.discount);
+    const room_2 = new Room(roomB.name, bookingsB, roomB.rate, roomB.discount);
+    const arrayOfRooms = [room_1, room_2]
+    const freeRooms = Room.availableRooms(arrayOfRooms, '2023-11-04', '2023-11-10');
+    expect(freeRooms).toEqual([room_1, room_2])
+  })
+})
+
+describe('Testing Booking Class', () => {
+  it('Calculando el precio/rate de la room, segun el discount de la clase booking', () => {
+    const roomA = {
+      name: 'Habitacion 1',
+      rate: 150,
+      discount: 20,
+    };
+    const booking1 = new Booking('booking 1', 'booking1@bo.com', '2023-10-01', '2023-10-03', 10, roomA);
+    const rate = booking1.getFee()
+    expect(rate).toBe(108)
+  })
+  it('Calculando el precio/rate de la room, segun el discount de la clase booking', () => {
+    const roomA = {
+      name: 'Habitacion 1',
+      rate: 150,
+      discount: 0,
+    };
+    const booking1 = new Booking('booking 1', 'booking1@bo.com', '2023-10-01', '2023-10-03', 0, roomA);
+    const rate = booking1.getFee()
+    expect(rate).toBe(150)
+  })
+  it('Calculando el precio/rate de la room, segun el discount de la clase booking', () => {
+    const roomA = {
+      name: 'Habitacion 1',
+      rate: 150,
+      discount: 0,
+    };
+    const booking1 = new Booking('booking 1', 'booking1@bo.com', '2023-10-01', '2023-10-03', 50, roomA);
+    const rate = booking1.getFee()
+    expect(rate).toBe(75)
   })
 })
