@@ -1,11 +1,16 @@
-class Room {
-  constructor(name, bookings, rate, discount) {
+export class Room {
+  name: string;
+  bookings: Booking[];
+  rate: number;
+  discount: number;
+
+  constructor(name: string, bookings: Booking[], rate: number, discount: number) {
     this.name = name;
     this.bookings = bookings;
     this.rate = rate;
     this.discount = discount;
   }
-  isOccupied(date) {
+  isOccupied(date: string): boolean {
     const myDate = new Date(date);
 
     for (let i = 0; i < this.bookings.length; i++) {
@@ -20,7 +25,7 @@ class Room {
     return false;
   }
 
-  occupancyPercentage(startingDate, endingDate) {
+  occupancyPercentage(startingDate: string, endingDate: string): number {
 //Creamos el objeto Date a partir de las fechas recibidas como parametro
     const startDate = new Date(startingDate);
     const endDate = new Date(endingDate);
@@ -42,17 +47,28 @@ class Room {
 //Si hay una intersección, significa que la reserva afecta al rango de fechas especificado.
       if (startDate <= bookingEndDate && endDate >= bookingStartDate) {
 //Si hay interseccion, se calcula la fecha de inicio y finalizacion entre los dos rangos de fechas. 
-        const intersectionStartDate = new Date(Math.max(startDate, bookingStartDate));
-        const intersectionEndDate = new Date(Math.min(endDate, bookingEndDate));
-  
+      const intersectionStartDate = new Date(Math.max(startDate.getTime(), bookingStartDate.getTime()));
+      const intersectionEndDate = new Date(Math.min(endDate.getTime(), bookingEndDate.getTime()));
+      
+      const intersectionStartDateMs = intersectionStartDate.getTime();
+      const intersectionEndDateMs = intersectionEndDate.getTime();
+
+// Calcula la diferencia en milisegundos entre intersectionEndDate y intersectionStartDate
+      const differenceMs = intersectionEndDateMs - intersectionStartDateMs;
+
 // Calcula la duración en días de la intersección
-        const daysInIntersection = Math.ceil((intersectionEndDate - intersectionStartDate) / (1000 * 60 * 60 * 24));
+      const daysInIntersection = Math.ceil(differenceMs / (1000 * 60 * 60 * 24));
 //Agregamos el numero de dias al occupiedDays
-        occupiedDays += daysInIntersection;
+      occupiedDays += daysInIntersection;
       }
     }
+
+    const startDateMs = startDate.getTime();
+    const endDateMs = endDate.getTime();
+// Calcula la diferencia en milisegundos entre endDate y startDate
+    const differenceMs = endDateMs - startDateMs;
 //Luego del bucle calculamos el número total de días en el rango especificado entre endDate y startDate por la cantidad de milisegundos en un día.
-    totalDaysInRange = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
+    totalDaysInRange = Math.ceil(differenceMs / (1000 * 60 * 60 * 24));
 //Si es igual a 0 significa que el rango especificado no contiene ningún día,
     if (totalDaysInRange === 0) {
       return 0;
@@ -62,7 +78,7 @@ class Room {
     return parseFloat(percentage.toFixed(1));
   }
 
-  static totalOccupancyPercentage(rooms, startDate, endDate) {
+  static totalOccupancyPercentage(rooms: Room[], startDate: string, endDate: string): number {
     function countDays(startDate, endDate) {
       const oneDay = 24 * 60 * 60 * 1000;
       return Math.round(Math.abs((startDate - endDate) / oneDay)) + 1;
@@ -83,8 +99,8 @@ class Room {
     return parseFloat(percentage);
   }
 
-  static availableRooms(rooms, startDate, endDate){
-    const availableRooms = [];
+  static availableRooms(rooms: Room[], startDate: string, endDate: string): Room[]{
+    const availableRooms: Room[] = [];
 
     for (const room of rooms) {
 //En cada iteracion evaluamos si la room esta ocupada en cualquiera de las dos fechas
@@ -98,8 +114,15 @@ class Room {
   }
 }
 
-class Booking{
-  constructor(name, email, checkin, checkout, discount, room){
+export class Booking{
+  name: string;
+  email: string;
+  checkin: string;
+  checkout: string;
+  discount: number;
+  room: Room;
+
+  constructor(name: string, email: string, checkin: string, checkout: string, discount: number, room: Room) {
     this.name = name;
     this.email = email;
     this.checkin = checkin;
@@ -107,7 +130,7 @@ class Booking{
     this.discount = discount;
     this.room = room;
   }
-  getFee(){
+  getFee(): number {
     // Obtén la tarifa base de la habitación desde la instancia de room
     const baseRate = this.room.rate;
 
@@ -125,8 +148,3 @@ class Booking{
 
   }
 }
-
-module.exports = {
-  Room,
-  Booking
-} 

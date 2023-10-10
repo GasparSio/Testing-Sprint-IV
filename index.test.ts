@@ -1,4 +1,4 @@
-const { Room, Booking } = require('./index.js');
+const { Room, Booking } = require('./index.ts');
 
 describe('Testing class Room', () => {
   it('isOccupied is true cuando la habitacion esta ocupada en una fecha dada', ()=> {
